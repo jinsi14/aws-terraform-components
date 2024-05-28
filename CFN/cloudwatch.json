@@ -1,0 +1,56 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Generic CloudWatch Dashboard for Amazon Connect",
+  "Parameters": {
+    "pInstanceId": {
+      "Description": "The Amazon Connect instance ID.",
+      "Type": "String"
+    },
+    "pContactFlowName1": {
+      "Description": "The first Amazon Connect Flow Name.",
+      "Type": "String"
+    },
+    "pContactFlowName2": {
+      "Description": "The second Amazon Connect Flow Name.",
+      "Type": "String"
+    },
+    "pQueueName1": {
+      "Description": "The first Amazon Connect Queue Name.",
+      "Type": "String"
+    },
+    "pQueueName2": {
+      "Description": "The second Amazon Connect Queue Name.",
+      "Type": "String"
+    }
+  },
+  "Resources": {
+    "ConnectDashboard": {
+      "Type": "AWS::CloudWatch::Dashboard",
+      "Properties": {
+        "DashboardName": "GenericConnectDashboard",
+        "DashboardBody": {
+          "Fn::Sub": [
+            "{\n  \"widgets\": [\n    {\n      \"type\": \"metric\",\n      \"x\": 0,\n      \"y\": 0,\n      \"width\": 12,\n      \"height\": 6,\n      \"properties\": {\n        \"metrics\": [\n          [ \"AWS/Connect\", \"ContactFlowErrors\", \"InstanceId\", \"${pInstanceId}\", \"ContactFlowName\", \"${pContactFlowName1}\", \"MetricGroup\", \"ContactFlow\" ],\n          [ \"AWS/Connect\", \"ContactFlowErrors\", \"InstanceId\", \"${pInstanceId}\", \"ContactFlowName\", \"${pContactFlowName2}\", \"MetricGroup\", \"ContactFlow\" ],\n          [ \"AWS/Connect\", \"LongestQueueWaitTime\", \"InstanceId\", \"${pInstanceId}\", \"QueueName\", \"${pQueueName1}\", \"MetricGroup\", \"Queue\" ],\n          [ \"AWS/Connect\", \"LongestQueueWaitTime\", \"InstanceId\", \"${pInstanceId}\", \"QueueName\", \"${pQueueName2}\", \"MetricGroup\", \"Queue\" ],\n          [ \"AWS/Connect\", \"QueueSize\", \"InstanceId\", \"${pInstanceId}\", \"QueueName\", \"${pQueueName1}\", \"MetricGroup\", \"Queue\" ],\n          [ \"AWS/Connect\", \"QueueSize\", \"InstanceId\", \"${pInstanceId}\", \"QueueName\", \"${pQueueName2}\", \"MetricGroup\", \"Queue\" ]\n        ],\n        \"stat\": \"Average\",\n        \"region\": \"${AWS::Region}\",\n        \"title\": \"Contact Flow Metrics for ${pContactFlowName1} and ${pContactFlowName2}\",\n        \"view\": \"bar\"\n      }\n    }\n  ]\n}",
+            {
+              "pInstanceId": {
+                "Ref": "pInstanceId"
+              },
+              "pContactFlowName1": {
+                "Ref": "pContactFlowName1"
+              },
+              "pContactFlowName2": {
+                "Ref": "pContactFlowName2"
+              },
+              "pQueueName1": {
+                "Ref": "pQueueName1"
+              },
+              "pQueueName2": {
+                "Ref": "pQueueName2"
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}

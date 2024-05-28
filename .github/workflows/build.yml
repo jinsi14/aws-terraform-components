@@ -1,0 +1,52 @@
+# name: Super-Linter
+#
+# on: push
+#
+# jobs:
+#   super-lint:
+#     name: Lint code base
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v2
+#
+#       - name: Run Super-Linter
+#         uses: github/super-linter@latest
+#
+#         env: 
+#           DEFAULT_BRANCH: feature_create_cloudwatch
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN}}
+
+
+name: Manual Execution Workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to deploy'
+        required: true
+        default: 'develop'
+        type: string
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        type: string
+        default: 'Dev'
+jobs:
+  deploy:
+    name: Deploy to selected environment
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Add steps here to deploy to the selected environment using the specified branch
+      # For example, you could use deployment scripts or custom deployment actions
+      # You can access the selected branch and environment using ${{ github.event.inputs.branch }} and ${{ github.event.inputs.environment }} respectively
+
+      - name: Deploy to ${{ github.event.inputs.environment }} from branch ${{ github.event.inputs.branch }}
+        run: |
+          echo "Deploying branch ${{ github.event.inputs.branch }} to environment ${{ github.event.inputs.environment }}"
+
+      # Add any additional steps you need for the deployment process

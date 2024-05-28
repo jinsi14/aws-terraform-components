@@ -1,0 +1,18 @@
+name: Automated Workflow
+
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Add steps here to build and test your code after a merge into Main branch
+      # You can run your build scripts, tests, or any other necessary steps here
